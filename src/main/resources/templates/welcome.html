@@ -16,7 +16,8 @@
 	<meta name="verimi-signin-authorization_server_port" th:content="${authorizationServerPort}" />
 	<meta name="verimi-signin-redirect_uri" th:content="${redirectUri}" />
 	<meta name="verimi-signin-client_id" th:content="${clientId}" />
-	<meta name="verimi-signin-scope" content="login write_basket" />
+	<meta name="verimi-signin-scope" content="login+read_basket" />
+	<meta name="verimi-signin-data" content="name" />
 	<!-- META TAGS FOR THE BUTTON -->
 </head>
 
@@ -36,7 +37,7 @@
 				<!--Example button 1:-->
 			<!--</div><br/>-->
 
-			<button data-scope="login write_basket read_basket" data-state="123" type="button" class="btn btn-success btn-lg verimi-signin-login-button">
+			<button data-scope="login+read_basket" data-state="123" type="button" class="btn btn-success btn-lg verimi-signin-login-button">
 				<img src="img/verimi-logo-white.svg" width="auto" height="26" style="padding: 0; margin: 0px 40px 0px 0px;" />
 				Login with verimi
 			</button>
@@ -82,6 +83,10 @@
 			<!--</div>-->
 			<br/>
 			<br/>
+			<!-- https://verimi.com/dipp/api/oauth/authorize?scope=login+read_basket&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fc%2Fportal%2Flogin&state=741fa9c9c967b76bd59dee08778d38da&client_id=ACME&data=name -->
+			<!-- https://verimi.com/dipp/api/oauth/authorize/ACME?response_type=code&redirect_uri=http://localhost:9000/authorization/code?parameter=dummy1&scope=login+read_basket&state=123 -->
+			<!-- https://verimi.com/dipp/api/oauth/authorize/ACME?response_type=code&redirect_uri=http://localhost:9000/authorization/code?parameter=dummy1&scope=login+read_basket&state=123&client_id=ACME -->
+			<!-- https://verimi.com/dipp/api/oauth/service_provider_access/ACME?response_type=code&redirect_uri=http://localhost:9000/authorization/code?parameter=dummy1&scope=login+read_basket&state=123 -->
 			<div class="row">
 				<div class="col-sm-12" style="background-color:#000000;">
 					<span style="color:#FFFFFF" th:text="${authorizationUrl}" />

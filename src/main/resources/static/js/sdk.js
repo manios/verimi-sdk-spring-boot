@@ -24,6 +24,7 @@
         _queryParameters['redirect_uri'] = readMeta('redirect_uri');
         _queryParameters['scope'] = readMeta('scope');
         _queryParameters['state'] = readMeta('state');
+        _queryParameters['client_id'] = _client_id;
         bindStartToButton();
     }
     function startLogin(scope, state) {
@@ -48,8 +49,7 @@
             readRequiredMeta('authorization_server_host'),
             ':',
             readRequiredMeta('authorization_server_port'),
-            '/oauth/service_provider_access/',
-            _client_id,
+            '/oauth/authorize/',
             '?',
             queryParameterString
         ].join('');
