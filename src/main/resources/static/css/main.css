@@ -1,0 +1,54 @@
+body {
+	background-image: url(http://cdn.wallpapersafari.com/39/27/5RqLxV.jpg);
+	background-position: center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
+	-moz-background-size: cover;
+	-webkit-background-size: cover;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	padding:20px;
+	color: #FFFFFF;
+}
+
+.access_token {
+    border:1px solid #CACACA;
+    background-color: #FFFFFF;
+    padding:15px;
+}
+
+.container {
+    opacity: 0.8;
+    background-color:#0D1D0CE;
+    text-align:center;
+    top: 50%;
+    left: 50%;
+}
+
+.container_token {
+    opacity: 0.8;
+    background-color:#0D1D0CE;
+}
+
+.white_bg {
+    background-color:#FFFFFF;
+}
+
+.verimi-signin-login-button {
+    min-height: 50px;
+    height: auto;
+    min-width: 300px;
+    width: fit-content;
+    max-width: 400px;
+    border-radius: 5px;
+    background-color: #0D9570;
+    background-image: -webkit-linear-gradient( -65deg, #00C283 0%, #00C283 80%, #0D9570 80%, #0D9570 80%);
+    background-image: linear-gradient( -65deg, #00C283 0%, #00C283 80%, #0D9570 80%, #0D9570 80%);
+    display: flex;
+    font-weight: 500;
+    font-size: 16px;
+}

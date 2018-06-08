@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Spring Boot Thymeleaf Hello World Example</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<link rel="stylesheet" type="text/css" href="webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+	<link rel="stylesheet" th:href="@{/css/main.css}" href="css/main.css" />
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="js/main.js"></script>
+
+	<!-- META TAGS FOR THE BUTTON -->
+	<meta name="verimi-signin-authorization_server_protocol" th:content="${authorizationServerProtocol}" />
+	<meta name="verimi-signin-authorization_server_host" th:content="${authorizationServerHost}" />
+	<meta name="verimi-signin-authorization_server_port" th:content="${authorizationServerPort}" />
+	<meta name="verimi-signin-redirect_uri" th:content="${redirectUri}" />
+	<meta name="verimi-signin-client_id" th:content="${clientId}" />
+	<meta name="verimi-signin-scope" content="login write_basket" />
+	<!-- META TAGS FOR THE BUTTON -->
+</head>
+
+<body>
+	<nav class="navbar navbar-inverse">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="#">Foo Service Provider</a>
+		</div>
+	</nav>
+
+	<div class="container">
+		<div class="starter-template" style="color:#000000">
+			<h3>Service provider needs to authenticate user.</h3>
+			<h5>And redirects the end user to the DIPP login. </h5>
+
+			<!--<div style="float:left">-->
+				<!--Example button 1:-->
+			<!--</div><br/>-->
+
+			<button data-scope="login write_basket read_basket" data-state="123" type="button" class="btn btn-success btn-lg verimi-signin-login-button">
+				<img src="img/verimi-logo-white.svg" width="auto" height="26" style="padding: 0; margin: 0px 40px 0px 0px;" />
+				Login with verimi
+			</button>
+
+			<!--<div style="float:left">-->
+				<!--Example button 2:-->
+			<!--</div><br/>-->
+			<!--<div class="verimi-signin">-->
+				<!--<div style="min-height: 50px;-->
+            				<!--height: auto;-->
+            				<!--min-width: 300px;-->
+            				<!--width: fit-content;-->
+            				<!--max-width: 400px;-->
+            				<!--text-align:center;-->
+            	<!--">-->
+					<!--<div class="verimi-signin-login-button" style="-->
+						<!--min-height: 50px;-->
+						<!--height: auto;-->
+						<!--min-width: 300px;-->
+						<!--width: fit-content;-->
+						<!--max-width: 400px;-->
+						<!--border-radius: 5px;-->
+						<!--background-color: #0D9570;-->
+						<!--background-image: -webkit-linear-gradient( -65deg, #00C283 0%, #00C283 80%, #0D9570 80%, #0D9570 80%);-->
+						<!--background-image: linear-gradient( -65deg, #00C283 0%, #00C283 80%, #0D9570 80%, #0D9570 80%);-->
+						<!--display: flex;-->
+					<!--">-->
+						<!--<img src="img/verimi-logo-white.svg" width="auto" height="26" style="padding: 0; margin: 14px 0px 0px 16px;" />-->
+						<!--<p style="-->
+							<!--font-family: 'Montserrat', sans-serif;-->
+							<!--padding: 0px 20px 0px 40px;-->
+							<!--margin: 0;-->
+							<!--color: white;-->
+							<!--font-weight: 500;-->
+							<!--font-size: 16px;-->
+							<!--line-height: 50px;-->
+							<!--cursor: pointer;"-->
+							   <!--onmouseover='this.style.textDecoration="underline"'-->
+							   <!--onmouseout='this.style.textDecoration="none"'>-->
+								<!--Login with verimi</p>-->
+					<!--</div>-->
+				<!--</div>-->
+			<!--</div>-->
+			<br/>
+			<br/>
+			<div class="row">
+				<div class="col-sm-12" style="background-color:#000000;">
+					<span style="color:#FFFFFF" th:text="${authorizationUrl}" />
+				</div>
+				<div class="col-sm-6 white_bg">Authorization server protcol:</div>
+				<div class="col-sm-6 white_bg"><span th:text="${authorizationServerProtocol}" /></div>
+				<div class="col-sm-6 white_bg">Authorization server host:</div>
+				<div class="col-sm-6 white_bg"><span th:text="${authorizationServerHost}" /></div>
+				<div class="col-sm-6 white_bg">Authorization server port:</div>
+				<div class="col-sm-6 white_bg"><span th:text="${authorizationServerPort}" /></div>
+				<div class="col-sm-6 white_bg">Client Id:</div>
+				<div class="col-sm-6 white_bg"><span th:text="${clientId}" /></div>
+				<div class="col-sm-6 white_bg">Client Secret:</div>
+				<div class="col-sm-6 white_bg"><span th:text="${clientSecret}" /></div>
+				<div class="col-sm-6 white_bg">Redirect uri:</div>
+				<div class="col-sm-6 white_bg"><span th:text="${redirectUri}" /></div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="webjars/bootstrap/3.3.7/js/bootstrap.min.js" />
+	<script src="js/sdk.js" />
+</body>
+</html>
