@@ -1,5 +1,6 @@
 # Verimi Spring Boot Integration Sample
 
+![Verimi logo](https://verimi.de/sandbox/img/logo.svg)
 
 ## Description
 This is a sample minimal implementation of the service provider integration as downloaded from [https://verimi.de/sdk-example/sdk-integration-example.zip](https://verimi.de/sdk-example/sdk-integration-example.zip) on 2018-06-08T13:00:00+03:00. It demonstrates the following flow:
