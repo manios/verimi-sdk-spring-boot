@@ -8,6 +8,7 @@ import javax.ws.rs.QueryParam;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
+
+import com.dipp.service.VerimiBasketService;
 
 @Controller
 public class WelcomeController {
@@ -57,7 +60,10 @@ public class WelcomeController {
 
 	@Value("${oauth.client_secret}")
 	private String clientSecret;
-	
+
+	@Autowired
+	private VerimiBasketService verimiBasketService;
+
 	private static boolean initializedSSLProps = false;
 	
 	/**
@@ -104,12 +110,16 @@ public class WelcomeController {
 
 		// Send the token post request
 		LOGGER.info("tokenRequestUrl {}", tokenRequestUrl);
-		initSSL();
-		ResponseEntity<AccessToken> token = TEMPLATE.exchange(tokenRequestUrl, HttpMethod.POST, prepareHttpEntity(),
+		// initSSL();
+		final ResponseEntity<AccessToken> token = TEMPLATE.exchange(tokenRequestUrl, HttpMethod.POST,
+				this.prepareHttpEntity(),
 				AccessToken.class);
 
 		model.put("access_token", token.getBody().toString());
 		LOGGER.info("accessToken: {}", model.get("access_token"));
+
+		this.verimiBasketService.queryBaskets(token.getBody().getAccessToken());
+
 		return "token";
 	}
 
