@@ -124,7 +124,7 @@ public class WelcomeController {
 		model.put("access_token", token.getBody().toString());
 		LOGGER.info("accessToken: {}", model.get("access_token"));
 
-		this.verimiBasketService.queryBaskets(token.getBody().getAccessToken());
+		LOGGER.info("Basket Response:{}", this.verimiBasketService.queryBaskets(token.getBody().getAccessToken()));
 
 		return "token";
 	}

@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -22,6 +23,17 @@ public class VerimiBasketServiceImpl implements VerimiBasketService {
 
 	private static final Logger logger = LoggerFactory.getLogger(VerimiBasketServiceImpl.class);
 
+	private static final String OAUTH_QUERY_BASKETS = "/query/baskets";
+
+	@Value("${oauth.authorization_server_protocol}")
+	private String authorizationServerProtocol;
+
+	@Value("${oauth.authorization_server_host}")
+	private String authorizationServerHost;
+
+	@Value("${oauth.authorization_server_port}")
+	private String authorizationServerPort;
+
 	@Autowired
 	private RestTemplate restTemplate;
 
@@ -30,7 +42,10 @@ public class VerimiBasketServiceImpl implements VerimiBasketService {
 
 		final HttpEntity<?> httpEntity = this.prepareHttpEntity(accessToken);
 
-		final String url = "https://verimi.com/dipp/api/query/baskets";
+		final String url = new StringBuffer().append(this.authorizationServerProtocol)
+				.append("://")
+				.append(this.authorizationServerHost).append(":").append(this.authorizationServerPort)
+				.append(OAUTH_QUERY_BASKETS).toString();
 
 		ResponseEntity<String> resp = null;
 		try {
