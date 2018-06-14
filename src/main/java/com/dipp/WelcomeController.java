@@ -25,7 +25,7 @@ import com.dipp.service.VerimiBasketService;
 public class WelcomeController {
 
 	private static final Logger LOGGER = getLogger(WelcomeController.class);
-	private static final RestTemplate TEMPLATE = new RestTemplate();
+
 	private static final String OAUTH_AUTHORIZE_REQUEST_PARAMS = "/oauth/authorize?response_type=code";
 	private static final String OAUTH_TOKEN_REQUEST_QUERY_PARAMS = "/oauth/token?grant_type=authorization_code&code=%code%&redirect_uri=";
 	private String authorizationServerUrl;
@@ -48,7 +48,7 @@ public class WelcomeController {
 
 	@Value("${trustStore.location}")
 	private String trustStoreLocation;
-	
+
 	@Value("${trustStore.password}")
 	private String trustStorePassword;
 
@@ -64,54 +64,60 @@ public class WelcomeController {
 	@Autowired
 	private VerimiBasketService verimiBasketService;
 
+	@Autowired
+	private RestTemplate restTemplate;
+
 	private static boolean initializedSSLProps = false;
-	
+
 	/**
 	 * Default handler for welcme page
+	 *
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping("/")
-	public String welcome(Map<String, Object> model) {
-		authorizationServerUrl = new StringBuffer().append(authorizationServerProtocol).append("://")
-				.append(authorizationServerHost).append(":").append(authorizationServerPort).toString();
+	public String welcome(final Map<String, Object> model) {
+		this.authorizationServerUrl = new StringBuffer().append(this.authorizationServerProtocol).append("://")
+				.append(this.authorizationServerHost).append(":").append(this.authorizationServerPort).toString();
 
-		authorizationUrl = new StringBuffer().append(authorizationServerUrl).append(OAUTH_AUTHORIZE_REQUEST_PARAMS)
-				.append("&client_id=").append(clientId).append("&redirect_uri=").append(redirectUri).toString();
+		this.authorizationUrl = new StringBuffer().append(this.authorizationServerUrl)
+				.append(OAUTH_AUTHORIZE_REQUEST_PARAMS)
+				.append("&client_id=").append(this.clientId).append("&redirect_uri=").append(this.redirectUri)
+				.toString();
 
-		model.put("authorizationUrl", authorizationUrl);
-		model.put("authorizationServerUrl", authorizationServerUrl);
-		model.put("redirectUri", redirectUri);
-		model.put("clientId", clientId);
-		model.put("clientSecret", clientSecret);
-		model.put("authorizationServerProtocol", authorizationServerProtocol);
-		model.put("authorizationServerHost", authorizationServerHost);
-		model.put("authorizationServerPort", authorizationServerPort);
+		model.put("authorizationUrl", this.authorizationUrl);
+		model.put("authorizationServerUrl", this.authorizationServerUrl);
+		model.put("redirectUri", this.redirectUri);
+		model.put("clientId", this.clientId);
+		model.put("clientSecret", this.clientSecret);
+		model.put("authorizationServerProtocol", this.authorizationServerProtocol);
+		model.put("authorizationServerHost", this.authorizationServerHost);
+		model.put("authorizationServerPort", this.authorizationServerPort);
 		return "welcome";
 	}
 
 	/**
 	 * Method for getting Token from Authorization Code
-	 * 
+	 *
 	 * @param model
 	 * @param code
 	 * @return
 	 */
 	@RequestMapping("/authorization/code")
-	public String getCode(Map<String, Object> model, @QueryParam(value = "code") String code) {
+	public String getCode(final Map<String, Object> model, @QueryParam(value = "code") final String code) {
 		LOGGER.info("Authorization code: {}", code);
 		model.put("code", code);
-		model.put("authorizationServerProtocol", authorizationServerProtocol);
-		model.put("authorizationServerHost", authorizationServerHost);
-		model.put("authorizationServerPort", authorizationServerPort);
+		model.put("authorizationServerProtocol", this.authorizationServerProtocol);
+		model.put("authorizationServerHost", this.authorizationServerHost);
+		model.put("authorizationServerPort", this.authorizationServerPort);
 
-		String tokenRequestUrl = parseTokenRequestUrl(code);
+		final String tokenRequestUrl = this.parseTokenRequestUrl(code);
 		LOGGER.info("postUrl {}", tokenRequestUrl);
 
 		// Send the token post request
 		LOGGER.info("tokenRequestUrl {}", tokenRequestUrl);
-		// initSSL();
-		final ResponseEntity<AccessToken> token = TEMPLATE.exchange(tokenRequestUrl, HttpMethod.POST,
+		// this.initSSL();
+		final ResponseEntity<AccessToken> token = this.restTemplate.exchange(tokenRequestUrl, HttpMethod.POST,
 				this.prepareHttpEntity(),
 				AccessToken.class);
 
@@ -130,42 +136,44 @@ public class WelcomeController {
 		if (!initializedSSLProps) {
 			System.setProperty("javax.net.ssl.keyStoreType", "pkcs12");
 			System.setProperty("javax.net.ssl.trustStoreType", "jks");
-			//System.setProperty("javax.net.debug", "ssl,handshake");
+			System.setProperty("javax.net.debug", "ssl,handshake");
 			System.setProperty("javax.net.ssl.trustStore",
-					trustStoreLocation);
-			System.setProperty("javax.net.ssl.trustStorePassword", trustStorePassword);
-			//this part is for 2-way TLS
-			if (keyStoreLocation!=null
-					&& !keyStoreLocation.isEmpty()) {
+					this.trustStoreLocation);
+			System.setProperty("javax.net.ssl.trustStorePassword", this.trustStorePassword);
+			// this part is for 2-way TLS
+			if (this.keyStoreLocation != null
+					&& !this.keyStoreLocation.isEmpty()) {
 				System.setProperty("javax.net.ssl.keyStore",
-						keyStoreLocation);
-				System.setProperty("javax.net.ssl.keyStorePassword", keyStorePassword);
+						this.keyStoreLocation);
+				System.setProperty("javax.net.ssl.keyStorePassword", this.keyStorePassword);
 			}
 			initializedSSLProps = true;
 		}
 	}
 
-	private String parseTokenRequestUrl(String code) {
-		authorizationServerUrl = new StringBuffer().append(authorizationServerProtocol).append("://")
-				.append(authorizationServerHost).append(":").append(authorizationServerPort).toString();
+	private String parseTokenRequestUrl(final String code) {
+		this.authorizationServerUrl = new StringBuffer().append(this.authorizationServerProtocol).append("://")
+				.append(this.authorizationServerHost).append(":").append(this.authorizationServerPort).toString();
 
-		final String tokenRequestUrl = authorizationServerUrl + OAUTH_TOKEN_REQUEST_QUERY_PARAMS + redirectUri;
+		final String tokenRequestUrl = this.authorizationServerUrl + OAUTH_TOKEN_REQUEST_QUERY_PARAMS
+				+ this.redirectUri;
 		LOGGER.info("tokenRequestUrl {}", tokenRequestUrl);
 		try {
 			return tokenRequestUrl.replaceAll("%code%", code);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			LOGGER.error("Token replace error", e);
 		}
 		return tokenRequestUrl;
 	}
-	
+
 	/**
 	 * Method for preperation of request headers
+	 *
 	 * @return
 	 */
 	private HttpEntity<?> prepareHttpEntity() {
-		HttpHeaders headers = new HttpHeaders();
-		byte[] authenticationToken = Base64.encodeBase64((clientId + ":" + clientSecret).getBytes());
+		final HttpHeaders headers = new HttpHeaders();
+		final byte[] authenticationToken = Base64.encodeBase64((this.clientId + ":" + this.clientSecret).getBytes());
 		headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE);
 		headers.add("Authorization", "Basic " + new String(authenticationToken));
 		return new HttpEntity<Void>(headers);
