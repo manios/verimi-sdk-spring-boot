@@ -46,12 +46,6 @@ public class WelcomeController {
 	@Value("${oauth.client_id}")
 	private String clientId;
 
-	@Value("${trustStore.location}")
-	private String trustStoreLocation;
-
-	@Value("${trustStore.password}")
-	private String trustStorePassword;
-
 	@Value("${keyStore.location}")
 	private String keyStoreLocation;
 
@@ -66,6 +60,9 @@ public class WelcomeController {
 
 	@Autowired
 	private RestTemplate restTemplate;
+
+	@Autowired
+	private AppConfiguration appConfiguration;
 
 	private static boolean initializedSSLProps = false;
 
@@ -124,31 +121,11 @@ public class WelcomeController {
 		model.put("access_token", token.getBody().toString());
 		LOGGER.info("accessToken: {}", model.get("access_token"));
 
-		LOGGER.info("Basket Response:{}", this.verimiBasketService.queryBaskets(token.getBody().getAccessToken()));
+		if (this.appConfiguration.isUatEnvironment()) {
+			LOGGER.info("Basket Response:{}", this.verimiBasketService.queryBaskets(token.getBody().getAccessToken()));
+		}
 
 		return "token";
-	}
-
-	/**
-	 * Method for initializing SSL props (if needed)
-	 */
-	private void initSSL() {
-		if (!initializedSSLProps) {
-			System.setProperty("javax.net.ssl.keyStoreType", "pkcs12");
-			System.setProperty("javax.net.ssl.trustStoreType", "jks");
-			System.setProperty("javax.net.debug", "ssl,handshake");
-			System.setProperty("javax.net.ssl.trustStore",
-					this.trustStoreLocation);
-			System.setProperty("javax.net.ssl.trustStorePassword", this.trustStorePassword);
-			// this part is for 2-way TLS
-			if (this.keyStoreLocation != null
-					&& !this.keyStoreLocation.isEmpty()) {
-				System.setProperty("javax.net.ssl.keyStore",
-						this.keyStoreLocation);
-				System.setProperty("javax.net.ssl.keyStorePassword", this.keyStorePassword);
-			}
-			initializedSSLProps = true;
-		}
 	}
 
 	private String parseTokenRequestUrl(final String code) {

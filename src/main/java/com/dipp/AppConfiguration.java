@@ -12,6 +12,7 @@ import java.security.cert.CertificateException;
 
 import javax.net.ssl.SSLContext;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -31,11 +32,17 @@ public class AppConfiguration {
 
 	private static final Logger logger = LoggerFactory.getLogger(AppConfiguration.class);
 
+	private static String API_ENVIROMENT_SANDBOX = "sandbox";
+	private static String API_ENVIROMENT_UAT = "uat";
+
 	@Value("${keyStore.location}")
 	private String keyStoreLocation;
 
 	@Value("${keyStore.password}")
 	private String keyStorePassword;
+
+	@Value("${oauth.api_environment}")
+	private String apiEnvironment;
 
 	/**
 	 * A custom RestTemplate which sends a client certificate along with every request to Verimi API. This is useful for
@@ -51,11 +58,16 @@ public class AppConfiguration {
 		final char[] password = this.keyStorePassword.toCharArray();
 		// System.setProperty("javax.net.debug", "ssl,handshake");
 
-		final HttpClient client = this.createCustomClient();
-		return builder
-				.requestFactory(new HttpComponentsClientHttpRequestFactory(client))
-				.additionalInterceptors(new LoggingRequestInterceptor())
+		// If we are targeting UAT environment, then we have to include a client certificate
+		if (this.isUatEnvironment()) {
+			final HttpClient client = this.createCustomClient();
+			builder
+					.requestFactory(new HttpComponentsClientHttpRequestFactory(client));
+		}
+
+		return builder.additionalInterceptors(new LoggingRequestInterceptor())
 				.build();
+
 	}
 
 	private HttpClient createCustomClient()
@@ -89,4 +101,13 @@ public class AppConfiguration {
 		return httpclient;
 	}
 
+	/**
+	 * Returns <code>true</code> if we are targeting Verimi UAT (User Acceptance Test) environment API.
+	 *
+	 * @return
+	 */
+	public boolean isUatEnvironment() {
+
+		return StringUtils.isNotBlank(this.apiEnvironment) && API_ENVIROMENT_UAT.equalsIgnoreCase(this.apiEnvironment);
+	}
 }
