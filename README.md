@@ -78,7 +78,7 @@ In order to run this sample Spring Boot application using Verimi UAT - User Acce
     server.port: 9000
 
     # This property accepts 2 values: "uat" or "sandbox". Default: "sandbox" 
-    oauth.api_environment=sandbox
+    oauth.api_environment=uat
     oauth.redirect_uri=http://localhost:9000/authorization/code?parameter=dummy1
     oauth.client_id=clientIdVerimiGaveYou
     oauth.client_secret=clientSecretVerimiGaveYou

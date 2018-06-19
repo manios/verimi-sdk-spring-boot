@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContexts;
 import org.slf4j.Logger;
@@ -61,8 +62,10 @@ public class AppConfiguration {
 		// If we are targeting UAT environment, then we have to include a client certificate
 		if (this.isUatEnvironment()) {
 			final HttpClient client = this.createCustomClient();
-			builder
-					.requestFactory(new HttpComponentsClientHttpRequestFactory(client));
+			return builder
+					.requestFactory(new HttpComponentsClientHttpRequestFactory(client))
+					.additionalInterceptors(new LoggingRequestInterceptor())
+					.build();
 		}
 
 		return builder.additionalInterceptors(new LoggingRequestInterceptor())
@@ -79,6 +82,9 @@ public class AppConfiguration {
 		final FileInputStream instream = new FileInputStream(new File(this.keyStoreLocation));
 		try {
 			keyStore.load(instream, this.keyStorePassword.toCharArray());
+		} catch (final Exception e) {
+			logger.error("Failed to load .p12 keystore:" + this.keyStoreLocation, e);
+
 		} finally {
 			instream.close();
 		}
@@ -86,7 +92,7 @@ public class AppConfiguration {
 		// Trust own CA and all self-signed certs
 		final SSLContext sslcontext = SSLContexts.custom()
 				.loadKeyMaterial(keyStore, this.keyStorePassword.toCharArray())
-				// .loadTrustMaterial(trustStore, new TrustSelfSignedStrategy())
+				.loadTrustMaterial(null, new TrustSelfSignedStrategy())
 				.build();
 		// Allow TLSv1 protocol only
 		final SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
@@ -94,7 +100,7 @@ public class AppConfiguration {
 				new NoopHostnameVerifier());
 
 		final HttpClient httpclient = HttpClients.custom()
-				// .setHostnameVerifier(SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)
+				.setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
 				.setSSLSocketFactory(sslsf)
 				.build();
 
