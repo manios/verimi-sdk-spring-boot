@@ -105,3 +105,8 @@ If everything is OK, then proceed to the next section.
 ## Access the application
 
 The application will load on localhost on port 9000 by default (you can configure a different port in the ```src/main/resources/application.properties```. Open a browser on [http://localhost:9000](http://localhost:9000) and press the "Login with Verimi" button to proceed.
+
+In the UAT environment if everything works as expected you will be able to retrieve baskets, i.e. user information. This information will be logged in logs and is going to look like the following:
+   ```
+   2018-06-19 10:56:21.505  INFO 1420 --- [io-8080-exec-10] com.dipp.WelcomeController               : Basket Response:{"basketId":"50ae7281-258a-4d4d-aa74-7434b80da157","serviceProviderId":"bobos","dataScopes":[{"scopeId":"email","data":[{"name":"email","value":"jlongjohn@test.com"},{"name":"standard","value":"true"},{"name":"verified","value":"true"},{"name":"contact","value":"true"},{"name":"id","value":"3a2b46aa-5065-327d-9a52-47175ee06b94"}]},{"scopeId":"name","data":[{"name":"firstName","value":"John"},{"name":"lastName","value":"Longjohn"},{"name":"title","value":"mr"},{"name":"academicTitle","value":""},{"name":"verified","value":"false"},{"name":"id","value":"b2de28ac-ec23-db6e-1863-300013a7af24"}]}]}
+   ```
