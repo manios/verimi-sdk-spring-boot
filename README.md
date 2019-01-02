@@ -1,9 +1,9 @@
 # Verimi Spring Boot Integration Sample
 
-![Verimi logo](https://verimi.de/sandbox/img/logo.svg)
+![Verimi logo](https://web-sandbox.perftest.verimi.tech/sdk/img/logo.svg)
 
 ## Description
-This is a sample minimal implementation of the service provider integration as downloaded from [https://verimi.de/sdk-example/sdk-integration-example.zip](https://verimi.de/sdk-example/sdk-integration-example.zip) on 2018-06-08T13:00:00+03:00. It demonstrates the following flow:
+This is a sample minimal implementation of the service provider integration as downloaded from [https://web-sandbox.perftest.verimi.tech/sdk/html/example.html](https://web-sandbox.perftest.verimi.tech/sdk/example/java-integration.zip) on 2018-06-08T13:00:00+03:00. It demonstrates the following flow:
  
 1. Redirects to the authorization server in order to login.
 1. Replies with the authorization ```code```
